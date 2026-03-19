@@ -122,6 +122,12 @@
             padding: 2px;
         }
 
+        .team-rank {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-right: 4px;
+        }
+
         .team-name {
             font-weight: 600;
             font-size: 1.1rem;
@@ -240,6 +246,10 @@
                 width: 20px;
                 height: 20px;
                 padding: 1px;
+            }
+            .team-rank {
+                font-size: 0.7rem;
+                margin-right: 2px;
             }
             .team-name {
                 font-size: 0.85rem;
@@ -610,7 +620,10 @@ Nino M,7,6`;
                     <div class="team ${t1IsWinner ? 'winner' : ''}">
                         <div class="team-info">
                             <img src="${t1.team.logo || 'https://via.placeholder.com/32'}" class="team-logo">
-                            <span class="team-name">${t1.team.shortDisplayName}</span>
+                            <span class="team-name">
+                                ${t1.curatedRank?.current && t1.curatedRank.current !== 99 ? `<span class="team-rank">${t1.curatedRank.current}</span>` : ''}
+                                ${t1.team.shortDisplayName}
+                            </span>
                         </div>
                         <div class="score">${t1.score !== "0" || status.includes(' Half') || isCompleted ? t1.score : '-'}</div>
                     </div>
@@ -618,7 +631,10 @@ Nino M,7,6`;
                     <div class="team ${t2IsWinner ? 'winner' : ''}">
                         <div class="team-info">
                             <img src="${t2.team.logo || 'https://via.placeholder.com/32'}" class="team-logo">
-                            <span class="team-name">${t2.team.shortDisplayName}</span>
+                            <span class="team-name">
+                                ${t2.curatedRank?.current && t2.curatedRank.current !== 99 ? `<span class="team-rank">${t2.curatedRank.current}</span>` : ''}
+                                ${t2.team.shortDisplayName}
+                            </span>
                         </div>
                         <div class="score">${t2.score !== "0" || status.includes(' Half') || isCompleted ? t2.score : '-'}</div>
                     </div>
