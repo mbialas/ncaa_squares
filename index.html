@@ -229,7 +229,7 @@
 
         /* Nav & Modal Styles */
         .nav-controls {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             display: flex;
@@ -379,10 +379,10 @@
 <body>
 
     <div class="nav-controls">
-        <button class="nav-btn active-blue" title="Toggle Scoreboard"
-            onclick="toggleSection('scoreboard', this)">🏀</button>
-        <button class="nav-btn active-blue" title="Toggle Payouts Table"
-            onclick="toggleSection('payouts-section', this)">💰</button>
+        <button class="nav-btn active-blue" title="Jump to Scoreboard"
+            onclick="document.getElementById('scoreboard').scrollIntoView({ behavior: 'smooth' })">🏀</button>
+        <button class="nav-btn active-blue" title="Jump to Payouts Table"
+            onclick="document.getElementById('payouts-section').scrollIntoView({ behavior: 'smooth' })">💰</button>
         <button class="nav-btn active-green" title="Payout Rules" onclick="openRulesModal()">ℹ️</button>
     </div>
 
@@ -824,20 +824,6 @@ Nino M,7,6`;
             });
         }
 
-        function toggleSection(id, btn) {
-            const el = document.getElementById(id);
-            if (el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-                btn.style.opacity = '1';
-                btn.style.filter = 'grayscale(0)';
-                btn.classList.add('active-blue');
-            } else {
-                el.classList.add('hidden');
-                btn.style.opacity = '0.5';
-                btn.style.filter = 'grayscale(1)';
-                btn.classList.remove('active-blue');
-            }
-        }
 
         function openRulesModal() {
             document.getElementById('rules-modal').classList.remove('hidden');
