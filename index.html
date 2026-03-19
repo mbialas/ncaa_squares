@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💵🏀 Dirty D's Squares 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --win-color: #10b981;
+            --payout-color: #fbbf24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            background-image:
+                radial-gradient(circle at top right, rgba(59, 130, 246, 0.15), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            font-weight: 800;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            line-height: 1.5;
+        }
+
+        /* Scoreboard Section */
+        #scoreboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto 4rem auto;
+        }
+
+        .game-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .game-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .game-note {
+            color: var(--payout-color);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .team-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            background: #fff;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .score {
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .winner .team-name,
+        .winner .score {
+            color: var(--win-color);
+        }
+
+        .square-result {
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .square-winner {
+            color: var(--payout-color);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        /* Payouts Section */
+        #payouts-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .payout-amount {
+            color: var(--win-color);
+            font-weight: 700;
+        }
+
+        /* Spinner & Messages */
+        #loader {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>💵 &nbsp;&nbsp;<span class="gradient-text">Dirty D's Squares 2026</span>&nbsp;&nbsp; 🏀</h1>
+        <p class="subtitle">
+            March 19th - April 6th<br>
+            <span style="font-size: 0.9rem;">Payouts are based on matching the smallest digit of each game's winning and
+                losing scores.</span>
+        </p>
+    </header>
+
+    <div id="scoreboard">
+        <div id="loader">
+            <div class="spinner"></div>
+            <div>Loading tournament games from March 17th...</div>
+        </div>
+    </div>
+
+    <div id="payouts-section">
+        <h2>Tournament Payouts</h2>
+
+        <table id="payout-table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Total Won</th>
+                    <th>Winning Games</th>
+                </tr>
+            </thead>
+            <tbody id="payout-body">
+                <!-- Generated by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Directly embedded CSV for zero-setup execution
+        const CSV_CONTENT = `Name,Winning,Losing
+Chris Blahm,6,2
+Chris Nystedt,0,2
+Dave Jaeger,9,2
+Mike Bennett,4,2
+Hammer,1,2
+Renee Sharman,8,2
+Bill Kost,3,2
+Jody Severini,5,2
+Artie Norris,2,2
+Mike Bennett,7,2
+Mike Bennett,6,5
+Nino Miletic,0,5
+Ryan Poirier,9,5
+Jody Severini,4,5
+Haley Jaeger,1,5
+Sunmi Lee,8,5
+ALMAW,3,5
+$,5,5
+Rob Jaeger,2,5
+Andy Poirier,7,5
+Haley Jaeger,6,1
+Paul Pilone,0,1
+Rod Huffman,9,1
+Jane Sevila,4,1
+Ron Brown,1,1
+Bill Jaeger,8,1
+Mike Beaman,3,1
+Matt Bialas,5,1
+Alex Kim,2,1
+Mark Sterner,7,1
+Mike Bennett,6,0
+Jody Severini,0,0
+Andy Poirier,9,0
+Chris Blahm,4,0
+$,1,0
+Tammy Steffan,8,0
+Artie Norris,3,0
+Steve Eybers,5,0
+Anthony Lee,2,0
+Jack Jaeger,7,0
+Hammer,6,8
+Jen Lee,0,8
+Tyler Poirier,9,8
+Liz Jaeger,4,8
+Sally Montre,1,8
+Kevin Rose,8,8
+Rod Huffman,3,8
+Glen Chun,5,8
+Kit Buckner,2,8
+Chris Nystedt,7,8
+Cindy Walker,6,4
+Renee Sharman,0,4
+$,9,4
+Mark Wohlgemuth,4,4
+Anthony Lee,1,4
+Andy Poirier,8,4
+Rich Jaeger,3,4
+Lottie Johnson,5,4
+Bill Jaeger,2,4
+Flynn Hulver,7,4
+Andy Poirier,6,7
+Bill Kost,0,7
+Steve Eybers,9,7
+Mark Sterner,4,7
+Rob Jaeger,1,7
+Paul Pilone,8,7
+Carleigh Poirier,3,7
+Cindy Walker,5,7
+Jessica Chun,2,7
+Chris Blahm,7,7
+Artie Norris,6,9
+Glen Chun,0,9
+Kit Buckner,9,9
+ALMAW,4,9
+Dave Poirier,1,9
+Hammer,8,9
+Flynn Hulver,3,9
+Sally Montre,5,9
+Jane Sevila,2,9
+$,7,9
+Mike Beaman,6,3
+Dave Poirier,0,3
+Matt Bialas,9,3
+Dave Jaeger,4,3
+Jody Severini,1,3
+Chris Blahm,8,3
+Lexi Donaldson,3,3
+Ron Brown,5,3
+Carleigh Poirier,2,3
+Kevin Rose,7,3
+Liz Jaeger,6,6
+Alex Kim,0,6
+Artie Norris,9,6
+Lottie Johnson,4,6
+Jessica Chun,1,6
+Tyler Poirier,8,6
+Ryan Poirier,3,6
+Hammer,5,6
+Declan Jaeger,2,6
+Nino Miletic,7,6`;
+
+        // Payout rules based on problem spec
+        const ROUND_PAYOUTS = [
+            { match: ['first four'], name: 'First Four', amt: 10 },
+            { match: ['1st round', 'first round', 'round of 64'], name: '1st round', amt: 25 },
+            { match: ['2nd round', 'second round', 'round of 32'], name: '2nd round', amt: 50 },
+            { match: ['3rd round', 'sweet 16', 'sweet sixteen', 'regional semifinal'], name: '3rd round', amt: 100 },
+            { match: ['4th round', 'elite 8', 'elite eight', 'regional final'], name: '4th round', amt: 200 },
+            { match: ['5th round', 'final four', 'national semifinal'], name: '5th round', amt: 400 },
+            { match: ['final round', 'championship', 'national title', 'national final'], name: 'Final round', amt: 1000 }
+        ];
+
+        let squares = [];
+        let playerStats = {};
+        let allTournamentEvents = [];
+
+        async function init() {
+            parseCSV();
+            await fetchAllTournamentGames();
+            setInterval(fetchAllTournamentGames, 60000); // refresh every minute
+        }
+
+        function parseCSV() {
+            const lines = CSV_CONTENT.trim().split(/\r?\n/);
+            squares = [];
+            // Skip header line
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const [name, winStr, loseStr] = lines[i].split(',');
+                squares.push({
+                    name: name.trim(),
+                    win: parseInt(winStr),
+                    lose: parseInt(loseStr)
+                });
+            }
+        }
+
+        function getRoundInfo(notesArr) {
+            if (!notesArr || notesArr.length === 0) return null;
+
+            for (const noteObj of notesArr) {
+                const text = (noteObj.headline || noteObj.type || "").toLowerCase();
+
+                // Exclude Non-NCAA tournaments just to be perfectly robust
+                if (text.includes('nit ') || text.includes('cbi') || text.includes('women')) continue;
+
+                for (const rule of ROUND_PAYOUTS) {
+                    if (rule.match.some(m => text.includes(m))) {
+                        return { name: rule.name, amt: rule.amt, raw: text };
+                    }
+                }
+            }
+            return null; // Not matched
+        }
+
+        function findSquareWinner(winScore, loseScore) {
+            const winDigit = winScore % 10;
+            const loseDigit = loseScore % 10;
+            return squares.find(sq => sq.win === winDigit && sq.lose === loseDigit);
+        }
+
+        function buildDateList() {
+            const dates = [];
+            const start = new Date(2026, 2, 17); // March 17, 2026
+            const maxEnd = new Date(2026, 3, 6); // April 6, 2026
+
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+
+            // We fetch from March 17th up to minimum of today or April 6th
+            const end = today < maxEnd ? today : maxEnd;
+
+            let current = new Date(start);
+            while (current <= end) {
+                const yyyy = current.getFullYear();
+                const mm = String(current.getMonth() + 1).padStart(2, '0');
+                const dd = String(current.getDate()).padStart(2, '0');
+                dates.push(`${yyyy}${mm}${dd}`);
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+
+        async function fetchAllTournamentGames() {
+            try {
+                const datesToFetch = buildDateList();
+                const newEvents = [];
+
+                // Fetch in small chunks to be easy on the browser and API
+                for (let i = 0; i < datesToFetch.length; i += 3) {
+                    const chunk = datesToFetch.slice(i, i + 3);
+                    const promises = chunk.map(d =>
+                        fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${d}&limit=300`)
+                            .then(res => res.ok ? res.json() : null)
+                            .catch(() => null)
+                    );
+
+                    const chunkResults = await Promise.all(promises);
+
+                    chunkResults.forEach(data => {
+                        if (data && data.events) {
+                            // Filter specifically for tournament games to keep the layout clean
+                            const ncaaGames = data.events.filter(e => getRoundInfo(e.competitions[0].notes || e.notes));
+                            newEvents.push(...ncaaGames);
+                        }
+                    });
+                }
+
+                // Replace old global state
+                allTournamentEvents = newEvents;
+                renderApp();
+            } catch (err) {
+                console.error("Error fetching completely:", err);
+            }
+        }
+
+        function renderApp() {
+            const scoreboardEl = document.getElementById('scoreboard');
+            const loaderEl = document.getElementById('loader');
+
+            // Reset square stats
+            squares.forEach(sq => {
+                sq.totalWon = 0;
+                sq.games = [];
+            });
+
+            // Keep only the loader, remove existing cards
+            Array.from(scoreboardEl.children).forEach(el => {
+                if (el.id !== 'loader') el.remove();
+            });
+            loaderEl.classList.add('hidden');
+
+            if (allTournamentEvents.length === 0) {
+                const noGames = document.createElement('div');
+                noGames.style.gridColumn = "1 / -1";
+                noGames.style.textAlign = "center";
+                noGames.innerText = "No upcoming or live tournament games fetched within the March 17 - April 6th range.";
+                scoreboardEl.appendChild(noGames);
+                renderPayouts();
+                return;
+            }
+
+            // Render sequentially by date/time order
+            allTournamentEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            allTournamentEvents.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+
+                const status = event.status.type.shortDetail;
+                const isCompleted = event.status.type.completed;
+
+                const t1 = event.competitions[0].competitors[0];
+                const t2 = event.competitions[0].competitors[1];
+
+                const s1 = parseInt(t1.score) || 0;
+                const s2 = parseInt(t2.score) || 0;
+
+                const t1IsWinner = isCompleted && s1 > s2;
+                const t2IsWinner = isCompleted && s2 > s1;
+
+                // Find game context (NCAA round) to determine payout amount
+                const notes = event.competitions[0].notes || event.notes || [];
+                const roundInfo = getRoundInfo(notes);
+
+                let squareSnippet = ``;
+                if (isCompleted && roundInfo) {
+                    const winScore = t1IsWinner ? s1 : s2;
+                    const loseScore = t1IsWinner ? s2 : s1;
+                    const squareWinner = findSquareWinner(winScore, loseScore);
+
+                    if (squareWinner) {
+                        const winTeamName = t1IsWinner ? t1.team.shortDisplayName : t2.team.shortDisplayName;
+
+                        // Update stats
+                        squareWinner.totalWon += roundInfo.amt;
+                        squareWinner.games.push(`$${roundInfo.amt} (${winTeamName})`);
+
+                        squareSnippet = `
+                            <div class="square-result">
+                                Winner (W: ${winScore % 10}, L: ${loseScore % 10}): <br>
+                                <span class="square-winner">${squareWinner.name} +$${roundInfo.amt}</span>
+                            </div>
+                        `;
+                    }
+                } else if (!isCompleted && roundInfo) {
+                    squareSnippet = `
+                        <div class="square-result" style="color: var(--text-muted)">
+                            Payout round active: $${roundInfo.amt} prize
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="game-header">
+                        ${status}
+                        ${roundInfo ? `<span class="game-note">${roundInfo.name}</span>` : ''}
+                    </div>
+                    
+                    <div class="team ${t1IsWinner ? 'winner' : ''}">
+                        <div class="team-info">
+                            <img src="${t1.team.logo || 'https://via.placeholder.com/32'}" class="team-logo">
+                            <span class="team-name">${t1.team.shortDisplayName}</span>
+                        </div>
+                        <div class="score">${t1.score !== "0" || status.includes(' Half') || isCompleted ? t1.score : '-'}</div>
+                    </div>
+
+                    <div class="team ${t2IsWinner ? 'winner' : ''}">
+                        <div class="team-info">
+                            <img src="${t2.team.logo || 'https://via.placeholder.com/32'}" class="team-logo">
+                            <span class="team-name">${t2.team.shortDisplayName}</span>
+                        </div>
+                        <div class="score">${t2.score !== "0" || status.includes(' Half') || isCompleted ? t2.score : '-'}</div>
+                    </div>
+
+                    ${squareSnippet}
+                `;
+
+                scoreboardEl.appendChild(card);
+            });
+
+            renderPayouts();
+        }
+
+        function renderPayouts() {
+            const tbody = document.getElementById('payout-body');
+            tbody.innerHTML = '';
+
+            // Sort squares by total won descending, then by name, then by win digit
+            const sortedSquares = [...squares].sort((a, b) => b.totalWon - a.totalWon || a.name.localeCompare(b.name) || a.win - b.win);
+
+            sortedSquares.forEach(p => {
+                // Highlight rows where player actually won money
+                const rowStyle = p.totalWon > 0 ? 'background: rgba(16, 185, 129, 0.05);' : '';
+
+                const tr = document.createElement('tr');
+                tr.style = rowStyle;
+                tr.innerHTML = `
+                    <td>${p.name} <span style="font-size: 0.85rem; color: var(--text-muted);">(W${p.win}, L${p.lose})</span></td>
+                    <td class="payout-amount">${p.totalWon > 0 ? '$' + p.totalWon : '-'}</td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted);">
+                        ${p.games.join(', ') || ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Boot up
+        init();
+    </script>
+</body>
+
+</html>
