@@ -230,27 +230,33 @@
             body {
                 padding: 1rem;
             }
+
             #scoreboard {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
             }
+
             .game-card {
                 padding: 0.75rem;
                 border-radius: 12px;
                 gap: 0.6rem;
             }
+
             .team-info {
                 gap: 0.4rem;
             }
+
             .team-logo {
                 width: 20px;
                 height: 20px;
                 padding: 1px;
             }
+
             .team-rank {
                 font-size: 0.7rem;
                 margin-right: 2px;
             }
+
             .team-name {
                 font-size: 0.85rem;
                 white-space: nowrap;
@@ -258,21 +264,26 @@
                 text-overflow: ellipsis;
                 max-width: 100px;
             }
+
             .score {
                 font-size: 1rem;
             }
+
             .game-header {
                 font-size: 0.7rem;
                 padding-bottom: 0.4rem;
             }
+
             .game-note {
                 font-size: 0.6rem;
                 letter-spacing: 0.02em;
             }
+
             .square-result {
                 font-size: 0.75rem;
                 padding-top: 0.5rem;
             }
+
             .square-winner {
                 font-size: 0.85rem;
             }
@@ -606,7 +617,7 @@ Nino M,7,6`;
                 } else if (!isCompleted && roundInfo) {
                     squareSnippet = `
                         <div class="square-result" style="color: var(--text-muted)">
-                            Payout round active: $${roundInfo.amt} prize
+                            Prize: $${roundInfo.amt}
                         </div>
                     `;
                 }
