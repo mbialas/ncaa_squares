@@ -227,7 +227,8 @@
         <h1><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟦</h1>
         <p class="subtitle">
             March 19th - April 6th<br>
-            <span style="font-size: 0.9rem;">Payouts are based on matching the smallest digit of each game's winning and
+            <span style="font-size: 0.9rem;">Payouts are based on matching the right-most digit of each game's winning
+                and
                 losing scores.</span>
         </p>
     </header>
@@ -590,10 +591,10 @@ Nino M,7,6`;
             const playersMap = {};
             squares.forEach(sq => {
                 if (!playersMap[sq.name]) {
-                    playersMap[sq.name] = { 
+                    playersMap[sq.name] = {
                         name: sq.name,
-                        totalWon: 0, 
-                        games: [], 
+                        totalWon: 0,
+                        games: [],
                         pairs: []
                     };
                 }
