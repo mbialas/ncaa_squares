@@ -801,7 +801,7 @@ Nino M,7,6`;
                 if (sq.games && sq.games.length > 0) {
                     playersMap[sq.name].games.push(...sq.games);
                 }
-                playersMap[sq.name].pairs.push(`(W${sq.win}, L${sq.lose})`);
+                playersMap[sq.name].pairs.push({ win: sq.win, lose: sq.lose });
             });
 
             // Sort grouped players by total won descending, then by name
@@ -813,11 +813,29 @@ Nino M,7,6`;
 
                 const tr = document.createElement('tr');
                 tr.style = rowStyle;
+
+                // Sort pairs by Winning number ascending
+                p.pairs.sort((a, b) => a.win - b.win);
+                
+                const pairsHtml = p.pairs.map((pair, idx) => {
+                    const isLast = idx === p.pairs.length - 1;
+                    const borderStr = isLast ? '' : 'border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 4px; margin-bottom: 4px;';
+                    return `
+                        <div style="font-size: 0.85rem; display: flex; gap: 12px; width: 60px; ${borderStr}">
+                            <span style="color: var(--win-color); font-weight: 700; width: 28px;">W${pair.win}</span>
+                            <span style="color: #ef4444; font-weight: 700;">L${pair.lose}</span>
+                        </div>
+                    `;
+                }).join('');
+
                 tr.innerHTML = `
-                    <td>${p.name} <span style="font-size: 0.85rem; color: var(--text-muted);">${p.pairs.join(', ')}</span></td>
-                    <td class="payout-amount">${p.totalWon > 0 ? '$' + p.totalWon : '-'}</td>
-                    <td style="font-size: 0.85rem; color: var(--text-muted);">
-                        ${p.games.join(', ') || ''}
+                    <td style="vertical-align: top; padding-top: 1.25rem;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">${p.name}</div>
+                        ${pairsHtml}
+                    </td>
+                    <td class="payout-amount" style="vertical-align: top; padding-top: 1.25rem;">${p.totalWon > 0 ? '$' + p.totalWon : '-'}</td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted); vertical-align: top; padding-top: 1.25rem;">
+                        ${p.games.join('<br>') || ''}
                     </td>
                 `;
                 tbody.appendChild(tr);
