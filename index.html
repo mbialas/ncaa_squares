@@ -225,6 +225,89 @@
             text-align: center;
         }
 
+        /* Nav & Modal Styles */
+        .nav-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 50;
+        }
+
+        .nav-btn {
+            background-color: var(--panel-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active-blue {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent);
+        }
+
+        .nav-btn.active-green {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-color: var(--win-color);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent) !important;
+            border-color: var(--accent) !important;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: var(--bg-base);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--text-muted);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .close-btn:hover {
+            color: var(--text-main);
+        }
+
         /* Mobile Adjustments for Scoreboard */
         @media (max-width: 600px) {
             body {
@@ -302,6 +385,28 @@
                 losing scores.</span>
         </p>
     </header>
+
+    <div class="nav-controls">
+        <button class="nav-btn active-blue" title="Toggle Scoreboard" onclick="toggleSection('scoreboard', this)">🏀</button>
+        <button class="nav-btn active-blue" title="Toggle Payouts Table" onclick="toggleSection('payouts-section', this)">💰</button>
+        <button class="nav-btn active-green" title="Payout Rules" onclick="openRulesModal()">ℹ️</button>
+    </div>
+
+    <!-- Payout Rules Modal -->
+    <div id="rules-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeRulesModal()">&times;</span>
+            <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--payout-color);">Payout Rules</h2>
+            <ul style="text-align: left; line-height: 2; list-style-type: none; padding: 0; margin: 0; font-size: 1.05rem;">
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>1st Round:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$25</span></li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>2nd Round:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$50</span></li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>3rd Round (Sweet 16):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$100</span></li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>4th Round (Elite 8):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$200</span></li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>5th Round (Final Four):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$400</span></li>
+                <li><strong>Championship:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$1000</span></li>
+            </ul>
+        </div>
+    </div>
 
     <div id="scoreboard">
         <div id="loader">
@@ -699,6 +804,37 @@ Nino M,7,6`;
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        function toggleSection(id, btn) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                btn.style.opacity = '1';
+                btn.style.filter = 'grayscale(0)';
+                btn.classList.add('active-blue');
+            } else {
+                el.classList.add('hidden');
+                btn.style.opacity = '0.5';
+                btn.style.filter = 'grayscale(1)';
+                btn.classList.remove('active-blue');
+            }
+        }
+
+        function openRulesModal() {
+            document.getElementById('rules-modal').classList.remove('hidden');
+        }
+
+        function closeRulesModal() {
+            document.getElementById('rules-modal').classList.add('hidden');
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('rules-modal');
+            if (event.target === modal) {
+                closeRulesModal();
+            }
         }
 
         // Boot up
