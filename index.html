@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏀🟦</title>
+    <title>🟩</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏀</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -250,7 +252,7 @@
             transition: all 0.2s;
             backdrop-filter: blur(5px);
             padding: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .nav-btn.active-blue {
@@ -290,7 +292,7 @@
             max-width: 400px;
             width: 90%;
             position: relative;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .close-btn {
@@ -303,7 +305,7 @@
             cursor: pointer;
             line-height: 1;
         }
-        
+
         .close-btn:hover {
             color: var(--text-main);
         }
@@ -377,7 +379,7 @@
 <body>
 
     <header>
-        <h1><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟦</h1>
+        <h1><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟩</h1>
         <p class="subtitle">
             March 19th - April 6th<br>
             <span style="font-size: 0.9rem;">Payouts are based on matching the right-most digit of each game's winning
@@ -387,8 +389,10 @@
     </header>
 
     <div class="nav-controls">
-        <button class="nav-btn active-blue" title="Toggle Scoreboard" onclick="toggleSection('scoreboard', this)">🏀</button>
-        <button class="nav-btn active-blue" title="Toggle Payouts Table" onclick="toggleSection('payouts-section', this)">💰</button>
+        <button class="nav-btn active-blue" title="Toggle Scoreboard"
+            onclick="toggleSection('scoreboard', this)">🏀</button>
+        <button class="nav-btn active-blue" title="Toggle Payouts Table"
+            onclick="toggleSection('payouts-section', this)">💰</button>
         <button class="nav-btn active-green" title="Payout Rules" onclick="openRulesModal()">ℹ️</button>
     </div>
 
@@ -397,13 +401,30 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeRulesModal()">&times;</span>
             <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--payout-color);">Payout Rules</h2>
-            <ul style="text-align: left; line-height: 2; list-style-type: none; padding: 0; margin: 0; font-size: 1.05rem;">
-                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>1st Round:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$25</span></li>
-                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>2nd Round:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$50</span></li>
-                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>3rd Round (Sweet 16):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$100</span></li>
-                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>4th Round (Elite 8):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$200</span></li>
-                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;"><strong>5th Round (Final Four):</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$400</span></li>
-                <li><strong>Championship:</strong> <span style="float: right; color: var(--win-color); font-weight: bold;">$1000</span></li>
+            <ul
+                style="text-align: left; line-height: 2; list-style-type: none; padding: 0; margin: 0; font-size: 1.05rem;">
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <strong>1st Round:</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$25</span>
+                </li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <strong>2nd Round:</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$50</span>
+                </li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <strong>3rd Round (Sweet 16):</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$100</span>
+                </li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <strong>4th Round (Elite 8):</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$200</span>
+                </li>
+                <li style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+                    <strong>5th Round (Final Four):</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$400</span>
+                </li>
+                <li><strong>Championship:</strong> <span
+                        style="float: right; color: var(--win-color); font-weight: bold;">$1000</span></li>
             </ul>
         </div>
     </div>
@@ -830,7 +851,7 @@ Nino M,7,6`;
         }
 
         // Close modal on outside click
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const modal = document.getElementById('rules-modal');
             if (event.target === modal) {
                 closeRulesModal();
