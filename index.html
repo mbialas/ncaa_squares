@@ -218,6 +218,55 @@
         .text-center {
             text-align: center;
         }
+
+        /* Mobile Adjustments for Scoreboard */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            #scoreboard {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .game-card {
+                padding: 0.75rem;
+                border-radius: 12px;
+                gap: 0.6rem;
+            }
+            .team-info {
+                gap: 0.4rem;
+            }
+            .team-logo {
+                width: 20px;
+                height: 20px;
+                padding: 1px;
+            }
+            .team-name {
+                font-size: 0.85rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100px;
+            }
+            .score {
+                font-size: 1rem;
+            }
+            .game-header {
+                font-size: 0.7rem;
+                padding-bottom: 0.4rem;
+            }
+            .game-note {
+                font-size: 0.6rem;
+                letter-spacing: 0.02em;
+            }
+            .square-result {
+                font-size: 0.75rem;
+                padding-top: 0.5rem;
+            }
+            .square-winner {
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
