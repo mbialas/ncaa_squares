@@ -378,16 +378,6 @@
 
 <body>
 
-    <header>
-        <h1><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟩</h1>
-        <p class="subtitle">
-            March 19th - April 6th<br>
-            <span style="font-size: 0.9rem;">Payouts are based on matching the right-most digit of each game's winning
-                and
-                losing scores.</span>
-        </p>
-    </header>
-
     <div class="nav-controls">
         <button class="nav-btn active-blue" title="Toggle Scoreboard"
             onclick="toggleSection('scoreboard', this)">🏀</button>
@@ -400,6 +390,13 @@
     <div id="rules-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeRulesModal()">&times;</span>
+            <header style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; text-align: center;">
+                <h1 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;"><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟩</h1>
+                <p class="subtitle" style="margin-bottom: 0;">
+                    March 19th - April 6th<br>
+                    <span style="font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">Payouts are based on matching the right-most digit of each game's winning and losing scores.</span>
+                </p>
+            </header>
             <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--payout-color);">Payout Rules</h2>
             <ul
                 style="text-align: left; line-height: 2; list-style-type: none; padding: 0; margin: 0; font-size: 1.05rem;">
