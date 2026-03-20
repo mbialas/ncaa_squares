@@ -57,6 +57,35 @@
             line-height: 1.5;
         }
 
+        .date-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            scrollbar-width: none;
+        }
+        .date-selector::-webkit-scrollbar {
+            display: none;
+        }
+        .date-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .date-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
         /* Scoreboard Section */
         #scoreboard {
             display: grid;
@@ -390,11 +419,14 @@
     <div id="rules-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-btn" onclick="closeRulesModal()">&times;</span>
-            <header style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; text-align: center;">
-                <h1 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;"><span class="gradient-text">Dirty D's</span>&nbsp; 🏀 🟩</h1>
+            <header
+                style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; text-align: center;">
+                <h1 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 0.5rem;"><span class="gradient-text">Dirty
+                        D's</span>&nbsp; 🏀 🟩</h1>
                 <p class="subtitle" style="margin-bottom: 0;">
                     March 19th - April 6th<br>
-                    <span style="font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">Payouts are based on matching the right-most digit of each game's winning and losing scores.</span>
+                    <span style="font-size: 0.9rem; margin-top: 0.5rem; display: inline-block;">Payouts are based on
+                        matching the right-most digit of each game's winning and losing scores.</span>
                 </p>
             </header>
             <h2 style="margin-top: 0; margin-bottom: 1.5rem; color: var(--payout-color);">Payout Rules</h2>
@@ -424,6 +456,10 @@
                         style="float: right; color: var(--win-color); font-weight: bold;">$1000</span></li>
             </ul>
         </div>
+    </div>
+
+    <div id="date-container" class="hidden" style="max-width: 1200px; margin: 0 auto 1rem auto; padding: 0 0.5rem;">
+        <div id="date-scroll" class="date-selector"></div>
     </div>
 
     <div id="scoreboard">
@@ -456,14 +492,14 @@
 Chris B,6,2
 Chris N,0,2
 Dave J,9,2
-Mike B,4,2
+Mike Bnt,4,2
 Hammer,1,2
 Renee S,8,2
 Bill K,3,2
 Jody S,5,2
 Artie N,2,2
-Mike B,7,2
-Mike B,6,5
+Mike Bnt,7,2
+Mike Bnt,6,5
 Nino M,0,5
 Ryan P,9,5
 Jody S,4,5
@@ -479,11 +515,11 @@ Rod H,9,1
 Jane S,4,1
 Ron B,1,1
 Bill J,8,1
-Mike B,3,1
+Mike Bmn,3,1
 Matt B,5,1
 Alex K,2,1
 Mark S,7,1
-Mike B,6,0
+Mike Bnt,6,0
 Jody S,0,0
 Andy P,9,0
 Chris B,4,0
@@ -533,7 +569,7 @@ Flynn H,3,9
 Sally M,5,9
 Jane S,2,9
 $,7,9
-Mike B,6,3
+Mike Bmn,6,3
 Dave P,0,3
 Matt B,9,3
 Dave J,4,3
@@ -613,26 +649,63 @@ Nino M,7,6`;
             return squares.find(sq => sq.win === winDigit && sq.lose === loseDigit);
         }
 
+        let currentFilterDate = null;
+        function getYYYYMMDD(dObj) {
+            const yyyy = dObj.getFullYear();
+            const mm = String(dObj.getMonth() + 1).padStart(2, '0');
+            const dd = String(dObj.getDate()).padStart(2, '0');
+            return `${yyyy}${mm}${dd}`;
+        }
+
         function buildDateList() {
             const dates = [];
-            const start = new Date(2026, 2, 19); // March 19, 2026
-            const maxEnd = new Date(2026, 3, 6); // April 6, 2026
-
-            const today = new Date();
-            today.setHours(23, 59, 59, 999);
-
-            // We fetch from March 19th up to minimum of today or April 6th
-            const end = today < maxEnd ? today : maxEnd;
-
+            const start = new Date(2026, 2, 19);
+            const end = new Date(2026, 3, 6);
             let current = new Date(start);
             while (current <= end) {
-                const yyyy = current.getFullYear();
-                const mm = String(current.getMonth() + 1).padStart(2, '0');
-                const dd = String(current.getDate()).padStart(2, '0');
-                dates.push(`${yyyy}${mm}${dd}`);
+                dates.push(getYYYYMMDD(current));
                 current.setDate(current.getDate() + 1);
             }
             return dates;
+        }
+
+        function renderDateSelector() {
+            const container = document.getElementById('date-scroll');
+            if (container.children.length === 0) {
+                const dates = Array.from(new Set(allTournamentEvents.map(e => getYYYYMMDD(new Date(e.date))))).sort();
+                if (dates.length === 0) return;
+
+                if (!currentFilterDate) {
+                    const todayStr = getYYYYMMDD(new Date());
+                    if (dates.includes(todayStr)) {
+                        currentFilterDate = todayStr;
+                    } else {
+                        currentFilterDate = dates.find(d => d > todayStr) || dates[dates.length - 1];
+                    }
+                }
+                
+                document.getElementById('date-container').classList.remove('hidden');
+
+                dates.forEach(d => {
+                    const btn = document.createElement('button');
+                    const mObj = new Date(parseInt(d.substring(0,4)), parseInt(d.substring(4,6))-1, parseInt(d.substring(6,8)));
+                    btn.innerText = mObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+                    btn.className = `date-btn ${d === currentFilterDate ? 'active' : ''}`;
+                    
+                    btn.onclick = () => {
+                        currentFilterDate = d;
+                        Array.from(container.children).forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderApp();
+                    };
+                    container.appendChild(btn);
+                });
+                
+                setTimeout(() => {
+                    const activeBtn = container.querySelector('.active');
+                    if (activeBtn) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
+                }, 50);
+            }
         }
 
         async function fetchAllTournamentGames() {
@@ -669,6 +742,8 @@ Nino M,7,6`;
         }
 
         function renderApp() {
+            renderDateSelector();
+
             const scoreboardEl = document.getElementById('scoreboard');
             const loaderEl = document.getElementById('loader');
 
@@ -745,6 +820,15 @@ Nino M,7,6`;
                     `;
                 }
 
+                const eventDateFormatted = (() => {
+                    const dObj = new Date(event.date);
+                    return getYYYYMMDD(dObj);
+                })();
+
+                if (eventDateFormatted !== currentFilterDate) {
+                    return; // Skip dom styling payload
+                }
+
                 card.innerHTML = `
                     <div class="game-header">
                         ${status}
@@ -816,25 +900,27 @@ Nino M,7,6`;
 
                 // Sort pairs by Winning number ascending
                 p.pairs.sort((a, b) => a.win - b.win);
-                
+
                 const pairsHtml = p.pairs.map((pair, idx) => {
-                    const isLast = idx === p.pairs.length - 1;
-                    const borderStr = isLast ? '' : 'border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 4px; margin-bottom: 4px;';
+                    const isLastRow = idx >= Math.floor((p.pairs.length - 1) / 2) * 2;
+                    const borderStr = isLastRow ? '' : 'border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 2px;';
                     return `
-                        <div style="font-size: 0.85rem; display: flex; gap: 12px; width: 60px; ${borderStr}">
-                            <span style="color: var(--win-color); font-weight: 700; width: 28px;">W${pair.win}</span>
-                            <span style="color: #ef4444; font-weight: 700;">L${pair.lose}</span>
+                        <div style="font-size: 0.85rem; display: flex; gap: 6px; width: max-content; padding-right: 2px; justify-content: center; ${borderStr}">
+                            <span style="color: var(--win-color); font-weight: 700; width: 14px; text-align: center;">${pair.win}</span>
+                            <span style="color: #ef4444; font-weight: 700; width: 14px; text-align: center;">${pair.lose}</span>
                         </div>
                     `;
                 }).join('');
 
                 tr.innerHTML = `
-                    <td style="vertical-align: top; padding-top: 1.25rem;">
-                        <div style="font-weight: 600; margin-bottom: 8px;">${p.name}</div>
-                        ${pairsHtml}
+                    <td style="vertical-align: top; padding-top: 1rem; padding-bottom: 1rem;">
+                        <div style="font-weight: 600; margin-bottom: 4px;">${p.name}</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, max-content); gap: 4px 12px;">
+                            ${pairsHtml}
+                        </div>
                     </td>
-                    <td class="payout-amount" style="vertical-align: top; padding-top: 1.25rem;">${p.totalWon > 0 ? '$' + p.totalWon : '-'}</td>
-                    <td style="font-size: 0.85rem; color: var(--text-muted); vertical-align: top; padding-top: 1.25rem;">
+                    <td class="payout-amount" style="vertical-align: top; padding-top: 1rem; padding-bottom: 1rem;">${p.totalWon > 0 ? '$' + p.totalWon : '-'}</td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted); vertical-align: top; padding-top: 1rem; padding-bottom: 1rem;">
                         ${p.games.join('<br>') || ''}
                     </td>
                 `;
