@@ -65,9 +65,11 @@
             margin-bottom: 1rem;
             scrollbar-width: none;
         }
+
         .date-selector::-webkit-scrollbar {
             display: none;
         }
+
         .date-btn {
             background: var(--panel-bg);
             border: 1px solid var(--border);
@@ -80,6 +82,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .date-btn.active {
             background: var(--accent);
             color: #fff;
@@ -683,15 +686,15 @@ Nino M,7,6`;
                         currentFilterDate = dates.find(d => d > todayStr) || dates[dates.length - 1];
                     }
                 }
-                
+
                 document.getElementById('date-container').classList.remove('hidden');
 
                 dates.forEach(d => {
                     const btn = document.createElement('button');
-                    const mObj = new Date(parseInt(d.substring(0,4)), parseInt(d.substring(4,6))-1, parseInt(d.substring(6,8)));
+                    const mObj = new Date(parseInt(d.substring(0, 4)), parseInt(d.substring(4, 6)) - 1, parseInt(d.substring(6, 8)));
                     btn.innerText = mObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
                     btn.className = `date-btn ${d === currentFilterDate ? 'active' : ''}`;
-                    
+
                     btn.onclick = () => {
                         currentFilterDate = d;
                         Array.from(container.children).forEach(b => b.classList.remove('active'));
@@ -700,7 +703,7 @@ Nino M,7,6`;
                     };
                     container.appendChild(btn);
                 });
-                
+
                 setTimeout(() => {
                     const activeBtn = container.querySelector('.active');
                     if (activeBtn) activeBtn.scrollIntoView({ inline: 'center', block: 'nearest' });
@@ -906,8 +909,8 @@ Nino M,7,6`;
                     const borderStr = isLastRow ? '' : 'border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 2px;';
                     return `
                         <div style="font-size: 0.85rem; display: flex; gap: 6px; width: max-content; padding-right: 2px; justify-content: center; ${borderStr}">
-                            <span style="color: var(--win-color); font-weight: 700; width: 14px; text-align: center;">${pair.win}</span>
-                            <span style="color: #ef4444; font-weight: 700; width: 14px; text-align: center;">${pair.lose}</span>
+                            <span style="color: var(--win-color); font-weight: 700; width: 10px; text-align: center;">${pair.win}</span>
+                            <span style="color: #ef4444; font-weight: 700; width: 10px; text-align: center;">${pair.lose}</span>
                         </div>
                     `;
                 }).join('');
